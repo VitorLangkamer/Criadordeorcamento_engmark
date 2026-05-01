@@ -807,8 +807,8 @@
         <!-- Projects section -->
         <div id="pdf-projects-section">
           <div class="pdf-section-heading">Memorial Descriminado dos Serviços</div>
-          <div id="pdf-projects-list"></div>
           <div class="pdf-art-notice">Todos os serviços com emissão de ART de elaboração de projetos.</div>
+          <div id="pdf-projects-list"></div>
         </div>
 
         <!-- ══ PÁGINA 2 — Quebra forçada antes deste bloco ══════ -->
@@ -1012,17 +1012,9 @@
 
     // ── Generate PDF ──────────────────────────────────────────────
     function generatePDF() {
-      const original = document.getElementById('pdf-preview');
+      const element = document.getElementById('pdf-preview');
       const clientName = document.getElementById('clientName').value.trim() || 'orcamento';
       const filename = `Orçamento_Engmark_${clientName.replace(/\s+/g, '_')}.pdf`;
-
-      // Clona o elemento e remove o min-height para evitar página em branco
-      const clone = original.cloneNode(true);
-      clone.style.minHeight = '0';
-      clone.style.position = 'absolute';
-      clone.style.left = '-9999px';
-      clone.style.top = '0';
-      document.body.appendChild(clone);
 
       const opt = {
         margin: [2, 2, 2, 2],
@@ -1032,9 +1024,7 @@
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
 
-      html2pdf().set(opt).from(clone).save().then(() => {
-        document.body.removeChild(clone);
-      });
+      html2pdf().set(opt).from(element).save();
     }
 
     // ── Reset form ────────────────────────────────────────────────
@@ -1064,3 +1054,5 @@
 </body>
 
 </html>
+
+
