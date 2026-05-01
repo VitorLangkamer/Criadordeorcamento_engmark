@@ -26,11 +26,8 @@
       --border: #22303d;
 
       --accent: #1f6feb;
-      /* azul principal do logo */
       --accent-lt: #4ea1ff;
-      /* azul mais claro */
       --accent-dk: #164a9c;
-      /* azul mais profundo */
 
       --text: #e6edf3;
       --muted: #8b949e;
@@ -181,18 +178,9 @@
       gap: 28px;
     }
 
-    .sidebar::-webkit-scrollbar {
-      width: 5px;
-    }
-
-    .sidebar::-webkit-scrollbar-track {
-      background: transparent;
-    }
-
-    .sidebar::-webkit-scrollbar-thumb {
-      background: var(--border);
-      border-radius: 99px;
-    }
+    .sidebar::-webkit-scrollbar { width: 5px; }
+    .sidebar::-webkit-scrollbar-track { background: transparent; }
+    .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
 
     .section-label {
       font-family: var(--font-head);
@@ -214,17 +202,9 @@
       background: var(--border);
     }
 
-    .field-group {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
+    .field-group { display: flex; flex-direction: column; gap: 12px; }
 
-    .field {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
+    .field { display: flex; flex-direction: column; gap: 5px; }
 
     .field label {
       font-size: 12px;
@@ -250,33 +230,17 @@
 
     .field input:focus,
     .field textarea:focus,
-    .field select:focus {
-      border-color: var(--accent);
-    }
+    .field select:focus { border-color: var(--accent); }
 
-    .field textarea {
-      resize: vertical;
-      min-height: 72px;
-    }
+    .field textarea { resize: vertical; min-height: 72px; }
 
     .field input::placeholder,
-    .field textarea::placeholder {
-      color: var(--muted);
-      opacity: 0.55;
-    }
+    .field textarea::placeholder { color: var(--muted); opacity: 0.55; }
 
-    .field-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
-    /* ── Project Cards (checkboxes) ─────────────────────────────── */
-    .project-cards {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
+    /* ── Project Cards ─────────────────────────────────────────── */
+    .project-cards { display: flex; flex-direction: column; gap: 10px; }
 
     .proj-card {
       border: 1.5px solid var(--border);
@@ -285,9 +249,7 @@
       transition: border-color 0.18s;
     }
 
-    .proj-card.checked {
-      border-color: var(--accent);
-    }
+    .proj-card.checked { border-color: var(--accent); }
 
     .proj-header {
       display: flex;
@@ -299,9 +261,7 @@
       user-select: none;
     }
 
-    .proj-header:hover {
-      background: #1f2a38;
-    }
+    .proj-header:hover { background: #1f2a38; }
 
     .proj-checkbox {
       width: 18px;
@@ -315,47 +275,16 @@
       transition: all 0.15s;
     }
 
-    .proj-card.checked .proj-checkbox {
-      background: var(--accent);
-      border-color: var(--accent);
-    }
+    .proj-card.checked .proj-checkbox { background: var(--accent); border-color: var(--accent); }
+    .proj-checkbox-icon { display: none; color: #000; }
+    .proj-card.checked .proj-checkbox-icon { display: block; }
 
-    .proj-checkbox-icon {
-      display: none;
-      color: #000;
-    }
+    .proj-icon { font-size: 18px; line-height: 1; }
 
-    .proj-card.checked .proj-checkbox-icon {
-      display: block;
-    }
-
-    .proj-icon {
-      font-size: 18px;
-      line-height: 1;
-    }
-
-    .proj-title {
-      flex: 1;
-      font-family: var(--font-head);
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text);
-    }
-
-    .proj-subtitle {
-      font-size: 11px;
-      color: var(--muted);
-    }
-
-    .proj-toggle {
-      color: var(--muted);
-      font-size: 12px;
-      transition: transform 0.2s;
-    }
-
-    .proj-card.open .proj-toggle {
-      transform: rotate(180deg);
-    }
+    .proj-title { flex: 1; font-family: var(--font-head); font-size: 13px; font-weight: 600; color: var(--text); }
+    .proj-subtitle { font-size: 11px; color: var(--muted); }
+    .proj-toggle { color: var(--muted); font-size: 12px; transition: transform 0.2s; }
+    .proj-card.open .proj-toggle { transform: rotate(180deg); }
 
     .proj-body {
       display: none;
@@ -364,46 +293,15 @@
       border-top: 1px solid var(--border);
     }
 
-    .proj-card.open .proj-body {
-      display: block;
-    }
+    .proj-card.open .proj-body { display: block; }
 
-    .proj-body ul {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-      margin-bottom: 12px;
-    }
+    .proj-body ul { list-style: none; display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
 
-    .proj-body ul li {
-      font-size: 12px;
-      color: var(--muted);
-      padding-left: 16px;
-      position: relative;
-    }
+    .proj-body ul li { font-size: 12px; color: var(--muted); padding-left: 16px; position: relative; }
+    .proj-body ul li::before { content: '›'; position: absolute; left: 4px; color: var(--accent); font-weight: 700; }
 
-    .proj-body ul li::before {
-      content: '›';
-      position: absolute;
-      left: 4px;
-      color: var(--accent);
-      font-weight: 700;
-    }
-
-    .proj-price-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .proj-price-row label {
-      font-size: 12px;
-      color: var(--muted);
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-
+    .proj-price-row { display: flex; align-items: center; gap: 8px; }
+    .proj-price-row label { font-size: 12px; color: var(--muted); white-space: nowrap; flex-shrink: 0; }
     .proj-price-row input {
       background: var(--card);
       border: 1px solid var(--border);
@@ -417,10 +315,7 @@
       width: 100%;
       transition: border-color 0.18s;
     }
-
-    .proj-price-row input:focus {
-      border-color: var(--accent);
-    }
+    .proj-price-row input:focus { border-color: var(--accent); }
 
     /* ── Total ──────────────────────────────────────────────────── */
     .total-box {
@@ -433,21 +328,8 @@
       justify-content: space-between;
     }
 
-    .total-label {
-      font-family: var(--font-head);
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--muted);
-      letter-spacing: 1px;
-      text-transform: uppercase;
-    }
-
-    .total-value {
-      font-family: var(--font-head);
-      font-size: 22px;
-      font-weight: 800;
-      color: var(--accent-lt);
-    }
+    .total-label { font-family: var(--font-head); font-size: 12px; font-weight: 700; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+    .total-value { font-family: var(--font-head); font-size: 22px; font-weight: 800; color: var(--accent-lt); }
 
     /* ── Preview pane ───────────────────────────────────────────── */
     .preview-pane {
@@ -460,7 +342,6 @@
     }
 
     /* ── PDF Document Styles ─────────────────────────────────────── */
-    /* ── PDF BASE ───────────────────────────────────────── */
     #pdf-preview {
       position: relative;
       background: #fff;
@@ -474,7 +355,6 @@
       overflow: hidden;
     }
 
-    /* ── Marca d’água ───────────────────────────────────── */
     #pdf-preview::before {
       content: "";
       position: absolute;
@@ -485,16 +365,12 @@
       pointer-events: none;
     }
 
-    #pdf-preview>* {
+    #pdf-preview > * {
       margin-bottom: 18px;
     }
 
     /* ── Header ─────────────────────────────────────────── */
-
-    .pdf-intro {
-      word-break: break-word;
-      overflow-wrap: break-word;
-    }
+    .pdf-intro { word-break: break-word; overflow-wrap: break-word; }
 
     .pdf-header {
       display: flex;
@@ -503,41 +379,24 @@
       border-bottom: 3px solid var(--accent);
       padding-bottom: 20px;
       margin-bottom: 28px;
+      /* Nunca cortar o cabeçalho */
+      page-break-inside: avoid;
+      break-inside: avoid;
     }
 
-    .pdf-logo-badge img {
-      width: 75px;
-      margin-bottom: 6px;
-    }
-
-    .pdf-company-name {
-      font-family: var(--font-head);
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--accent-dk);
-    }
-
-    .pdf-company-sub {
-      font-size: 11px;
-      color: #666;
-    }
-
-    .pdf-contact {
-      text-align: right;
-      font-size: 11px;
-      color: #555;
-    }
+    .pdf-logo-badge img { width: 75px; margin-bottom: 6px; }
+    .pdf-company-name { font-family: var(--font-head); font-size: 15px; font-weight: 700; color: var(--accent-dk); }
+    .pdf-company-sub { font-size: 11px; color: #666; }
+    .pdf-contact { text-align: right; font-size: 11px; color: #555; }
 
     /* ── Title ──────────────────────────────────────────── */
-    .pdf-doc-title {
-      font-family: var(--font-head);
-      font-size: 22px;
-      font-weight: 800;
-      color: var(--accent-dk);
-    }
+    .pdf-doc-title { font-family: var(--font-head); font-size: 22px; font-weight: 800; color: var(--accent-dk); }
+    .pdf-client-line { font-size: 14px; }
 
-    .pdf-client-line {
-      font-size: 14px;
+    /* ── Title block — nunca cortar ─────────────────────── */
+    .pdf-title-block {
+      page-break-inside: avoid;
+      break-inside: avoid;
     }
 
     /* ── Section heading ───────────────────────────────── */
@@ -552,15 +411,21 @@
       padding: 7px 14px;
       border-radius: 4px;
       margin-bottom: 16px;
+      /* Heading sempre junto ao próximo elemento */
+      page-break-after: avoid;
+      break-after: avoid;
     }
 
     /* ── Projetos ───────────────────────────────────────── */
     .pdf-project-block {
-      margin-bottom: 20px;
+      margin-bottom: 14px;
       padding: 14px 16px;
       border: 1px solid #e5e7eb;
       border-radius: 6px;
       background: #fafafa;
+      /* Bloco de projeto nunca cortado ao meio */
+      page-break-inside: avoid;
+      break-inside: avoid;
     }
 
     .pdf-project-title {
@@ -572,10 +437,7 @@
       justify-content: space-between;
     }
 
-    .pdf-project-price {
-      color: var(--accent);
-      font-weight: 700;
-    }
+    .pdf-project-price { color: var(--accent); font-weight: 700; }
 
     .pdf-project-items li {
       font-size: 12px;
@@ -591,6 +453,15 @@
       color: var(--accent);
     }
 
+    .pdf-art-notice {
+      font-size: 11.5px;
+      color: #555;
+      font-style: italic;
+      margin-top: 4px;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
     /* ── Total ─────────────────────────────────────────── */
     .pdf-total-row {
       display: flex;
@@ -599,18 +470,18 @@
       background: var(--accent-dk);
       border-radius: 6px;
       margin: 20px 0;
+      /* Total nunca cortado */
+      page-break-inside: avoid;
+      break-inside: avoid;
     }
 
-    .pdf-total-label {
-      font-family: var(--font-head);
-      font-size: 12px;
-      color: #cbd5e1;
-    }
+    .pdf-total-label { font-family: var(--font-head); font-size: 12px; color: #cbd5e1; }
+    .pdf-total-value { font-family: var(--font-head); font-size: 20px; color: var(--accent-lt); }
 
-    .pdf-total-value {
-      font-family: var(--font-head);
-      font-size: 20px;
-      color: var(--accent-lt);
+    /* ── Bloco Pagamento — SEMPRE inicia em nova página ── */
+    .pdf-page-2 {
+      page-break-before: always;
+      break-before: page;
     }
 
     /* ── Observações ───────────────────────────────────── */
@@ -619,6 +490,20 @@
       background: #f5f7fa;
       border-left: 3px solid var(--accent);
       padding: 12px 14px;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    /* ── Bloco de pagamento inteiro — evitar corte ──────── */
+    .pdf-payment-block {
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    /* ── Bloco de observações inteiro ──────────────────── */
+    .pdf-obs-block {
+      page-break-inside: avoid;
+      break-inside: avoid;
     }
 
     /* ── Footer ────────────────────────────────────────── */
@@ -629,73 +514,31 @@
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
+      /* Footer nunca cortado */
+      page-break-inside: avoid;
+      break-inside: avoid;
     }
 
-    .pdf-sig {
-      margin-top: 90px;
-    }
-
-    .pdf-sig-line {
-      width: 220px;
-      border-bottom: 1px solid #333;
-      margin-bottom: 6px;
-    }
-
-    .pdf-sig-name {
-      font-family: var(--font-head);
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--accent-dk);
-    }
-
-    .pdf-sig-role {
-      font-size: 11px;
-      color: #555;
-    }
-
-    /* ── Rodapé fixo elegante ─────────────────────────── *
+    .pdf-sig { margin-top: 90px; }
+    .pdf-sig-line { width: 220px; border-bottom: 1px solid #333; margin-bottom: 6px; }
+    .pdf-sig-name { font-family: var(--font-head); font-size: 12px; font-weight: 700; color: var(--accent-dk); }
+    .pdf-sig-role { font-size: 11px; color: #555; }
 
     /* ── Scrollbar for preview ──────────────────────────────────── */
-    .preview-pane::-webkit-scrollbar {
-      width: 6px;
-    }
-
-    .preview-pane::-webkit-scrollbar-track {
-      background: #ccc;
-    }
-
-    .preview-pane::-webkit-scrollbar-thumb {
-      background: #999;
-      border-radius: 99px;
-    }
+    .preview-pane::-webkit-scrollbar { width: 6px; }
+    .preview-pane::-webkit-scrollbar-track { background: #ccc; }
+    .preview-pane::-webkit-scrollbar-thumb { background: #999; border-radius: 99px; }
 
     /* ── Responsive ─────────────────────────────────────────────── */
     @media (max-width: 1100px) {
-      .app-shell {
-        grid-template-columns: 300px 1fr;
-      }
-
-      #pdf-preview {
-        width: 680px;
-        font-size: 12px;
-      }
+      .app-shell { grid-template-columns: 300px 1fr; }
+      #pdf-preview { width: 680px; font-size: 12px; }
     }
 
     @media (max-width: 860px) {
-      .app-shell {
-        grid-template-columns: 1fr;
-        grid-template-rows: 64px 1fr;
-      }
-
-      .sidebar {
-        order: 2;
-        overflow-y: visible;
-        height: auto;
-      }
-
-      .preview-pane {
-        display: none;
-      }
+      .app-shell { grid-template-columns: 1fr; grid-template-rows: 64px 1fr; }
+      .sidebar { order: 2; overflow-y: visible; height: auto; }
+      .preview-pane { display: none; }
     }
   </style>
 </head>
@@ -785,10 +628,8 @@
           <!-- Arquitetônico -->
           <div class="proj-card" id="card-arq" data-key="arq">
             <div class="proj-header" onclick="toggleCard('arq')">
-              <div class="proj-checkbox"><svg class="proj-checkbox-icon" width="11" height="11" viewBox="0 0 12 12"
-                  fill="none">
-                  <polyline points="2,6 5,9 10,3" stroke="#000" stroke-width="2" stroke-linecap="round"
-                    stroke-linejoin="round" />
+              <div class="proj-checkbox"><svg class="proj-checkbox-icon" width="11" height="11" viewBox="0 0 12 12" fill="none">
+                  <polyline points="2,6 5,9 10,3" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                 </svg></div>
               <span class="proj-icon">🏛</span>
               <div>
@@ -814,10 +655,8 @@
           <!-- Estrutural -->
           <div class="proj-card" id="card-est" data-key="est">
             <div class="proj-header" onclick="toggleCard('est')">
-              <div class="proj-checkbox"><svg class="proj-checkbox-icon" width="11" height="11" viewBox="0 0 12 12"
-                  fill="none">
-                  <polyline points="2,6 5,9 10,3" stroke="#000" stroke-width="2" stroke-linecap="round"
-                    stroke-linejoin="round" />
+              <div class="proj-checkbox"><svg class="proj-checkbox-icon" width="11" height="11" viewBox="0 0 12 12" fill="none">
+                  <polyline points="2,6 5,9 10,3" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                 </svg></div>
               <span class="proj-icon">🏗</span>
               <div>
@@ -843,10 +682,8 @@
           <!-- Elétrico -->
           <div class="proj-card" id="card-ele" data-key="ele">
             <div class="proj-header" onclick="toggleCard('ele')">
-              <div class="proj-checkbox"><svg class="proj-checkbox-icon" width="11" height="11" viewBox="0 0 12 12"
-                  fill="none">
-                  <polyline points="2,6 5,9 10,3" stroke="#000" stroke-width="2" stroke-linecap="round"
-                    stroke-linejoin="round" />
+              <div class="proj-checkbox"><svg class="proj-checkbox-icon" width="11" height="11" viewBox="0 0 12 12" fill="none">
+                  <polyline points="2,6 5,9 10,3" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                 </svg></div>
               <span class="proj-icon">⚡</span>
               <div>
@@ -872,10 +709,8 @@
           <!-- Hidrossanitário -->
           <div class="proj-card" id="card-hid" data-key="hid">
             <div class="proj-header" onclick="toggleCard('hid')">
-              <div class="proj-checkbox"><svg class="proj-checkbox-icon" width="11" height="11" viewBox="0 0 12 12"
-                  fill="none">
-                  <polyline points="2,6 5,9 10,3" stroke="#000" stroke-width="2" stroke-linecap="round"
-                    stroke-linejoin="round" />
+              <div class="proj-checkbox"><svg class="proj-checkbox-icon" width="11" height="11" viewBox="0 0 12 12" fill="none">
+                  <polyline points="2,6 5,9 10,3" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                 </svg></div>
               <span class="proj-icon">💧</span>
               <div>
@@ -942,6 +777,8 @@
     <main class="preview-pane">
       <div id="pdf-preview">
 
+        <!-- ══ PÁGINA 1 ══════════════════════════════════════════ -->
+
         <!-- Header -->
         <div class="pdf-header">
           <div>
@@ -974,35 +811,39 @@
           <div class="pdf-art-notice">Todos os serviços com emissão de ART de elaboração de projetos.</div>
         </div>
 
-        <!-- Total -->
-        <div class="pdf-total-row">
-          <span class="pdf-total-label">Total dos Projetos</span>
-          <span class="pdf-total-value" id="pdf-total">R$ 0,00</span>
-        </div>
+        <!-- ══ PÁGINA 2 — Quebra forçada antes deste bloco ══════ -->
+        <div class="pdf-page-2">
 
-        <!-- Payment -->
-        <div class="pdf-payment-block">
-          <div class="pdf-section-heading">Condição de Pagamento</div>
-          <div class="pdf-payment-text" id="pdf-payment">—</div>
-          <div class="pdf-pix">Chave PIX: <strong id="pdf-pix">—</strong></div>
-        </div>
-
-        <!-- Observations -->
-        <div class="pdf-obs-block">
-          <div class="pdf-section-heading">Observações</div>
-          <div class="pdf-obs-text" id="pdf-obs">—</div>
-        </div>
-
-        <!-- Footer -->
-        <div class="pdf-footer">
-          <div class="pdf-city-date" id="pdf-footer-date">São Mateus – ES, —</div>
-          <div class="pdf-sig">
-            <div class="pdf-sig-line"></div>
-            <div class="pdf-sig-name">Maikel Langkamer de Souza</div>
-            <div class="pdf-sig-role">ENGMARK ENGENHARIA E EMPREENDIMENTOS LTDA</div>
+          <!-- Total -->
+          <div class="pdf-total-row">
+            <span class="pdf-total-label">Total dos Projetos</span>
+            <span class="pdf-total-value" id="pdf-total">R$ 0,00</span>
           </div>
-        </div>
 
+          <!-- Payment -->
+          <div class="pdf-payment-block">
+            <div class="pdf-section-heading">Condição de Pagamento</div>
+            <div class="pdf-payment-text" id="pdf-payment">—</div>
+            <div class="pdf-pix">Chave PIX: <strong id="pdf-pix">—</strong></div>
+          </div>
+
+          <!-- Observations -->
+          <div class="pdf-obs-block">
+            <div class="pdf-section-heading">Observações</div>
+            <div class="pdf-obs-text" id="pdf-obs">—</div>
+          </div>
+
+          <!-- Footer -->
+          <div class="pdf-footer">
+            <div class="pdf-city-date" id="pdf-footer-date">São Mateus – ES, —</div>
+            <div class="pdf-sig">
+              <div class="pdf-sig-line"></div>
+              <div class="pdf-sig-name">Maikel Langkamer de Souza</div>
+              <div class="pdf-sig-role">ENGMARK ENGENHARIA E EMPREENDIMENTOS LTDA</div>
+            </div>
+          </div>
+
+        </div><!-- /.pdf-page-2 -->
 
       </div><!-- /#pdf-preview -->
     </main>
@@ -1023,7 +864,6 @@
       },
       est: {
         label: '1) Estrutural',
-        section: 'PROJETOS COMPLEMENTARES',
         items: [
           'a) Plantas de formas e lajes',
           'b) Cortes',
@@ -1055,7 +895,6 @@
 
     // ── Init ──────────────────────────────────────────────────────
     document.addEventListener('DOMContentLoaded', () => {
-      // set today's date
       const today = new Date().toISOString().split('T')[0];
       document.getElementById('docDate').value = today;
       updatePreview();
@@ -1064,15 +903,9 @@
     // ── Toggle project card ───────────────────────────────────────
     function toggleCard(key) {
       const card = document.getElementById('card-' + key);
-      const wasOpen = card.classList.contains('open');
-
-      // toggle open (expand/collapse)
       card.classList.toggle('open');
-
-      // toggle checked (select/deselect)
       selected[key] = !selected[key];
       card.classList.toggle('checked', selected[key]);
-
       updateTotal();
       updatePreview();
     }
@@ -1117,11 +950,8 @@
       const list = document.getElementById('pdf-projects-list');
       list.innerHTML = '';
 
-      let hasComplementar = false;
       const keys = ['arq', 'est', 'ele', 'hid'];
       const complementarKeys = ['est', 'ele', 'hid'];
-
-      // Insert "PROJETOS COMPLEMENTARES" heading before first complementar selected
       let complementarHeadingInserted = false;
 
       keys.forEach(key => {
@@ -1130,7 +960,6 @@
         const proj = PROJECTS[key];
         const price = parseFloat(document.getElementById('price-' + key).value) || 0;
 
-        // Insert complementar heading once
         if (complementarKeys.includes(key) && !complementarHeadingInserted) {
           const heading = document.createElement('div');
           heading.className = 'pdf-section-heading';
@@ -1147,12 +976,12 @@
         const itemsHtml = proj.items.map(i => `<li>${i}</li>`).join('');
 
         block.innerHTML = `
-        <div class="pdf-project-title">
-          <span>${proj.label}</span>
-          ${priceStr}
-        </div>
-        <ul class="pdf-project-items">${itemsHtml}</ul>
-      `;
+          <div class="pdf-project-title">
+            <span>${proj.label}</span>
+            ${priceStr}
+          </div>
+          <ul class="pdf-project-items">${itemsHtml}</ul>
+        `;
         list.appendChild(block);
       });
 
@@ -1225,3 +1054,4 @@
 </body>
 
 </html>
+
