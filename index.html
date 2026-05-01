@@ -1012,9 +1012,17 @@
 
     // ── Generate PDF ──────────────────────────────────────────────
     function generatePDF() {
-      const element = document.getElementById('pdf-preview');
+      const original = document.getElementById('pdf-preview');
       const clientName = document.getElementById('clientName').value.trim() || 'orcamento';
       const filename = `Orçamento_Engmark_${clientName.replace(/\s+/g, '_')}.pdf`;
+
+      // Clona o elemento e remove o min-height para evitar página em branco
+      const clone = original.cloneNode(true);
+      clone.style.minHeight = '0';
+      clone.style.position = 'absolute';
+      clone.style.left = '-9999px';
+      clone.style.top = '0';
+      document.body.appendChild(clone);
 
       const opt = {
         margin: [2, 2, 2, 2],
@@ -1024,7 +1032,9 @@
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
 
-      html2pdf().set(opt).from(element).save();
+      html2pdf().set(opt).from(clone).save().then(() => {
+        document.body.removeChild(clone);
+      });
     }
 
     // ── Reset form ────────────────────────────────────────────────
