@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="./images/engmarklogo.png">
+  <title>Engmark — Gerador de Orçamento</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet">
+
+  <!-- html2pdf -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <style>
+    /* ── Design Tokens ─────────────────────────────────────────── */
+    :root {
+      --bg: #0a0f14;
+      --surface: #121a22;
+      --card: #16212b;
+      --border: #22303d;
+
+      --accent: #1f6feb;
+      /* azul principal do logo */
+      --accent-lt: #4ea1ff;
+      /* azul mais claro */
+      --accent-dk: #164a9c;
+      /* azul mais profundo */
+
+      --text: #e6edf3;
+      --muted: #8b949e;
+
+      --danger: #f85149;
+      --success: #3fb950;
+
+      --radius: 10px;
+
+      --font-head: 'Poppins', sans-serif;
+      --font-body: 'Poppins', sans-serif;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-weight: 400;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── Layout ─────────────────────────────────────────────────── */
+    .app-shell {
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      grid-template-rows: 64px 1fr;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* ── Top Bar ─────────────────────────────────────────────────── */
+    .topbar {
+      grid-column: 1 / -1;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+      gap: 16px;
+    }
+
+    .topbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-mark {
+      width: 36px;
+      height: 36px;
+      background: var(--accent);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-head);
+      font-weight: 800;
+      font-size: 18px;
+      color: #000;
+      letter-spacing: -1px;
+    }
+
+    .topbar-brand h1 {
+      font-family: var(--font-head);
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: 0.5px;
+    }
+
+    .topbar-brand span {
+      display: block;
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 300;
+      color: var(--muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-top: -2px;
+    }
+
+    .topbar-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 18px;
+      border-radius: var(--radius);
+      font-family: var(--font-body);
+      font-size: 13.5px;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.18s ease;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+
+    .btn-ghost:hover {
+      background: var(--card);
+      color: var(--text);
+      border-color: var(--accent);
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #000;
+      font-weight: 600;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-lt);
+      transform: translateY(-1px);
+    }
+
+    .btn svg {
+      width: 15px;
+      height: 15px;
+    }
+
+    /* ── Sidebar (form) ────────────────────────────────────────── */
+    .sidebar {
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
+      padding: 24px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    .sidebar::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    .sidebar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .sidebar::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 99px;
+    }
+
+    .section-label {
+      font-family: var(--font-head);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .field label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--muted);
+      letter-spacing: 0.3px;
+    }
+
+    .field input,
+    .field textarea,
+    .field select {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 13.5px;
+      padding: 9px 12px;
+      outline: none;
+      transition: border-color 0.18s;
+      width: 100%;
+    }
+
+    .field input:focus,
+    .field textarea:focus,
+    .field select:focus {
+      border-color: var(--accent);
+    }
+
+    .field textarea {
+      resize: vertical;
+      min-height: 72px;
+    }
+
+    .field input::placeholder,
+    .field textarea::placeholder {
+      color: var(--muted);
+      opacity: 0.55;
+    }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    /* ── Project Cards (checkboxes) ─────────────────────────────── */
+    .project-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .proj-card {
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: border-color 0.18s;
+    }
+
+    .proj-card.checked {
+      border-color: var(--accent);
+    }
+
+    .proj-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 14px;
+      cursor: pointer;
+      background: var(--card);
+      user-select: none;
+    }
+
+    .proj-header:hover {
+      background: #1f2a38;
+    }
+
+    .proj-checkbox {
+      width: 18px;
+      height: 18px;
+      border: 2px solid var(--border);
+      border-radius: 5px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+
+    .proj-card.checked .proj-checkbox {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .proj-checkbox-icon {
+      display: none;
+      color: #000;
+    }
+
+    .proj-card.checked .proj-checkbox-icon {
+      display: block;
+    }
+
+    .proj-icon {
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    .proj-title {
+      flex: 1;
+      font-family: var(--font-head);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .proj-subtitle {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .proj-toggle {
+      color: var(--muted);
+      font-size: 12px;
+      transition: transform 0.2s;
+    }
+
+    .proj-card.open .proj-toggle {
+      transform: rotate(180deg);
+    }
+
+    .proj-body {
+      display: none;
+      padding: 12px 14px 14px;
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+    }
+
+    .proj-card.open .proj-body {
+      display: block;
+    }
+
+    .proj-body ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-bottom: 12px;
+    }
+
+    .proj-body ul li {
+      font-size: 12px;
+      color: var(--muted);
+      padding-left: 16px;
+      position: relative;
+    }
+
+    .proj-body ul li::before {
+      content: '›';
+      position: absolute;
+      left: 4px;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .proj-price-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .proj-price-row label {
+      font-size: 12px;
+      color: var(--muted);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .proj-price-row input {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--accent);
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 500;
+      padding: 7px 10px;
+      outline: none;
+      width: 100%;
+      transition: border-color 0.18s;
+    }
+
+    .proj-price-row input:focus {
+      border-color: var(--accent);
+    }
+
+    /* ── Total ──────────────────────────────────────────────────── */
+    .total-box {
+      background: linear-gradient(135deg, #1a2535, #1c2a1a);
+      border: 1.5px solid var(--accent);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .total-label {
+      font-family: var(--font-head);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .total-value {
+      font-family: var(--font-head);
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--accent-lt);
+    }
+
+    /* ── Preview pane ───────────────────────────────────────────── */
+    .preview-pane {
+      background: #e8e8e8;
+      overflow-y: auto;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 32px 24px;
+    }
+
+    /* ── PDF Document Styles ─────────────────────────────────────── */
+    /* ── PDF BASE ───────────────────────────────────────── */
+    #pdf-preview {
+      position: relative;
+      background: #fff;
+      width: 794px;
+      min-height: 1123px;
+      padding: 52px 56px;
+      font-family: var(--font-body);
+      font-size: 13px;
+      color: #1a1a1a;
+      line-height: 1.6;
+      overflow: hidden;
+    }
+
+    /* ── Marca d’água ───────────────────────────────────── */
+    #pdf-preview::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: url('./images/engmarklogo.png') no-repeat center;
+      background-size: 420px;
+      opacity: 0.03;
+      pointer-events: none;
+    }
+
+    #pdf-preview>* {
+      margin-bottom: 16px;
+    }
+
+    /* ── Header ─────────────────────────────────────────── */
+
+    .pdf-intro {
+      word-break: break-word;
+      overflow-wrap: break-word;
+    }
+
+    .pdf-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 3px solid var(--accent);
+      padding-bottom: 20px;
+      margin-bottom: 28px;
+    }
+
+    .pdf-logo-badge img {
+      width: 75px;
+      margin-bottom: 6px;
+    }
+
+    .pdf-company-name {
+      font-family: var(--font-head);
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--accent-dk);
+    }
+
+    .pdf-company-sub {
+      font-size: 11px;
+      color: #666;
+    }
+
+    .pdf-contact {
+      text-align: right;
+      font-size: 11px;
+      color: #555;
+    }
+
+    /* ── Title ──────────────────────────────────────────── */
+    .pdf-doc-title {
+      font-family: var(--font-head);
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--accent-dk);
+    }
+
+    .pdf-client-line {
+      font-size: 14px;
+    }
+
+    /* ── Section heading ───────────────────────────────── */
+    .pdf-section-heading {
+      font-family: var(--font-head);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #fff;
+      background: var(--accent);
+      padding: 7px 14px;
+      border-radius: 4px;
+      margin-bottom: 16px;
+    }
+
+    /* ── Projetos ───────────────────────────────────────── */
+    .pdf-project-block {
+      margin-bottom: 20px;
+      padding: 14px 16px;
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      background: #fafafa;
+    }
+
+    .pdf-project-title {
+      font-family: var(--font-head);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent-dk);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .pdf-project-price {
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .pdf-project-items li {
+      font-size: 12px;
+      color: #444;
+      padding-left: 12px;
+      position: relative;
+    }
+
+    .pdf-project-items li::before {
+      content: '•';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+    }
+
+    /* ── Total ─────────────────────────────────────────── */
+    .pdf-total-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 14px 16px;
+      background: var(--accent-dk);
+      border-radius: 6px;
+      margin: 20px 0;
+    }
+
+    .pdf-total-label {
+      font-family: var(--font-head);
+      font-size: 12px;
+      color: #cbd5e1;
+    }
+
+    .pdf-total-value {
+      font-family: var(--font-head);
+      font-size: 20px;
+      color: var(--accent-lt);
+    }
+
+    /* ── Observações ───────────────────────────────────── */
+    .pdf-obs-text {
+      font-size: 12.5px;
+      background: #f5f7fa;
+      border-left: 3px solid var(--accent);
+      padding: 12px 14px;
+    }
+
+    /* ── Footer ────────────────────────────────────────── */
+    .pdf-footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid #ddd;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .pdf-sig {
+      margin-top: 90px;
+    }
+
+    .pdf-sig-line {
+      width: 220px;
+      border-bottom: 1px solid #333;
+      margin-bottom: 6px;
+    }
+
+    .pdf-sig-name {
+      font-family: var(--font-head);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--accent-dk);
+    }
+
+    .pdf-sig-role {
+      font-size: 11px;
+      color: #555;
+    }
+
+    /* ── Rodapé fixo elegante ─────────────────────────── *
+
+    /* ── Scrollbar for preview ──────────────────────────────────── */
+    .preview-pane::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .preview-pane::-webkit-scrollbar-track {
+      background: #ccc;
+    }
+
+    .preview-pane::-webkit-scrollbar-thumb {
+      background: #999;
+      border-radius: 99px;
+    }
+
+    /* ── Responsive ─────────────────────────────────────────────── */
+    @media (max-width: 1100px) {
+      .app-shell {
+        grid-template-columns: 300px 1fr;
+      }
+
+      #pdf-preview {
+        width: 680px;
+        font-size: 12px;
+      }
+    }
+
+    @media (max-width: 860px) {
+      .app-shell {
+        grid-template-columns: 1fr;
+        grid-template-rows: 64px 1fr;
+      }
+
+      .sidebar {
+        order: 2;
+        overflow-y: visible;
+        height: auto;
+      }
+
+      .preview-pane {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="app-shell">
+
+    <!-- ── Top Bar ──────────────────────────────────────────────── -->
+    <header class="topbar">
+      <div class="topbar-brand">
+        <div class="logo-mark">EM</div>
+        <h1>Engmark<span>Gerador de Orçamento</span></h1>
+      </div>
+      <div class="topbar-actions">
+        <button class="btn btn-ghost" onclick="resetForm()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+            <path d="M3 3v5h5" />
+          </svg>
+          Limpar
+        </button>
+        <button class="btn btn-primary" onclick="generatePDF()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+            <polyline points="14,2 14,8 20,8" />
+            <line x1="12" y1="18" x2="12" y2="12" />
+            <line x1="9" y1="15" x2="15" y2="15" />
+          </svg>
+          Gerar PDF
+        </button>
+      </div>
+    </header>
+
+    <!-- ── Sidebar ───────────────────────────────────────────────── -->
+    <aside class="sidebar">
+
+      <!-- 1. Dados do Cliente -->
+      <div>
+        <p class="section-label">Cliente</p>
+        <div class="field-group">
+          <div class="field">
+            <label>Nome do cliente</label>
+            <input type="text" id="clientName" placeholder="Ex.: Sr. Wellington e Rosane" oninput="updatePreview()" />
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label>Cidade/UF</label>
+              <input type="text" id="city" value="São Mateus – ES" oninput="updatePreview()" />
+            </div>
+            <div class="field">
+              <label>Data</label>
+              <input type="date" id="docDate" oninput="updatePreview()" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Descrição da obra -->
+      <div>
+        <p class="section-label">Obra</p>
+        <div class="field-group">
+          <div class="field">
+            <label>Descrição da edificação</label>
+            <textarea id="buildingDesc" rows="3"
+              placeholder="Ex.: Edificação de dois pavimentos sendo no térreo – garagem e ponto comercial..."
+              oninput="updatePreview()"></textarea>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label>Área aprox. (m²)</label>
+              <input type="number" id="area" placeholder="Ex.: 178" oninput="updatePreview()" />
+            </div>
+            <div class="field">
+              <label>Nº de pavimentos</label>
+              <input type="number" id="floors" placeholder="Ex.: 2" oninput="updatePreview()" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Projetos -->
+      <div>
+        <p class="section-label">Projetos incluídos</p>
+        <div class="project-cards" id="projectCards">
+
+          <!-- Arquitetônico -->
+          <div class="proj-card" id="card-arq" data-key="arq">
+            <div class="proj-header" onclick="toggleCard('arq')">
+              <div class="proj-checkbox"><svg class="proj-checkbox-icon" width="11" height="11" viewBox="0 0 12 12"
+                  fill="none">
+                  <polyline points="2,6 5,9 10,3" stroke="#000" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                </svg></div>
+              <span class="proj-icon">🏛</span>
+              <div>
+                <div class="proj-title">Arquitetônico</div>
+                <div class="proj-subtitle">Projeto base</div>
+              </div>
+              <span class="proj-toggle">▼</span>
+            </div>
+            <div class="proj-body">
+              <ul>
+                <li>Plantas dos pavimentos</li>
+                <li>Cortes</li>
+                <li>Detalhes isométricos</li>
+                <li>Elaboração de requerimento para prefeitura</li>
+              </ul>
+              <div class="proj-price-row">
+                <label>Valor (R$)</label>
+                <input type="number" id="price-arq" placeholder="0,00" oninput="updateTotal()" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Estrutural -->
+          <div class="proj-card" id="card-est" data-key="est">
+            <div class="proj-header" onclick="toggleCard('est')">
+              <div class="proj-checkbox"><svg class="proj-checkbox-icon" width="11" height="11" viewBox="0 0 12 12"
+                  fill="none">
+                  <polyline points="2,6 5,9 10,3" stroke="#000" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                </svg></div>
+              <span class="proj-icon">🏗</span>
+              <div>
+                <div class="proj-title">Estrutural</div>
+                <div class="proj-subtitle">Complementar</div>
+              </div>
+              <span class="proj-toggle">▼</span>
+            </div>
+            <div class="proj-body">
+              <ul>
+                <li>Plantas de formas e lajes</li>
+                <li>Cortes</li>
+                <li>Escopo de ferragens</li>
+                <li>Lista de materiais</li>
+              </ul>
+              <div class="proj-price-row">
+                <label>Valor (R$)</label>
+                <input type="number" id="price-est" placeholder="0,00" oninput="updateTotal()" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Elétrico -->
+          <div class="proj-card" id="card-ele" data-key="ele">
+            <div class="proj-header" onclick="toggleCard('ele')">
+              <div class="proj-checkbox"><svg class="proj-checkbox-icon" width="11" height="11" viewBox="0 0 12 12"
+                  fill="none">
+                  <polyline points="2,6 5,9 10,3" stroke="#000" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                </svg></div>
+              <span class="proj-icon">⚡</span>
+              <div>
+                <div class="proj-title">Elétrico</div>
+                <div class="proj-subtitle">Complementar</div>
+              </div>
+              <span class="proj-toggle">▼</span>
+            </div>
+            <div class="proj-body">
+              <ul>
+                <li>Plantas baixas com layout de circuitos</li>
+                <li>Escopo de montagens de quadros de disjuntores</li>
+                <li>Quadro de cargas</li>
+                <li>Lista de materiais</li>
+              </ul>
+              <div class="proj-price-row">
+                <label>Valor (R$)</label>
+                <input type="number" id="price-ele" placeholder="0,00" oninput="updateTotal()" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Hidrossanitário -->
+          <div class="proj-card" id="card-hid" data-key="hid">
+            <div class="proj-header" onclick="toggleCard('hid')">
+              <div class="proj-checkbox"><svg class="proj-checkbox-icon" width="11" height="11" viewBox="0 0 12 12"
+                  fill="none">
+                  <polyline points="2,6 5,9 10,3" stroke="#000" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                </svg></div>
+              <span class="proj-icon">💧</span>
+              <div>
+                <div class="proj-title">Hidrossanitário</div>
+                <div class="proj-subtitle">Complementar</div>
+              </div>
+              <span class="proj-toggle">▼</span>
+            </div>
+            <div class="proj-body">
+              <ul>
+                <li>Plantas baixas com layout das tubulações</li>
+                <li>Escopo de montagens de caixas de inspeção</li>
+                <li>Detalhes isométricos</li>
+                <li>Lista de materiais</li>
+              </ul>
+              <div class="proj-price-row">
+                <label>Valor (R$)</label>
+                <input type="number" id="price-hid" placeholder="0,00" oninput="updateTotal()" />
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- 4. Total -->
+      <div class="total-box">
+        <span class="total-label">Total dos projetos</span>
+        <span class="total-value" id="totalDisplay">R$ 0,00</span>
+      </div>
+
+      <!-- 5. Condições de pagamento -->
+      <div>
+        <p class="section-label">Pagamento</p>
+        <div class="field-group">
+          <div class="field">
+            <label>Condição de pagamento</label>
+            <input type="text" id="paymentCondition" placeholder="Ex.: Entrada de R$ 1.250,00 + 1x na entrega"
+              oninput="updatePreview()" />
+          </div>
+          <div class="field">
+            <label>Chave PIX</label>
+            <input type="text" id="pixKey" value="CNPJ: 58.147.963/0001-00 – Engmark Projetos – C6 Bank"
+              oninput="updatePreview()" />
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. Observações -->
+      <div>
+        <p class="section-label">Observações</p>
+        <div class="field-group">
+          <div class="field">
+            <label>Texto de observações</label>
+            <textarea id="observations" rows="5"
+              oninput="updatePreview()">No momento do protocolizar o projeto na prefeitura terá uma taxa de aproximadamente R$ 180,00 e no momento de aprovação do projeto terá outra taxa que será calculada pelo setor de aprovação do projeto. Após pagá-la receberá o projeto aprovado. Taxas por conta do cliente.</textarea>
+          </div>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- ── Preview Pane ───────────────────────────────────────────── -->
+    <main class="preview-pane">
+      <div id="pdf-preview">
+
+        <!-- Header -->
+        <div class="pdf-header">
+          <div>
+            <div class="pdf-logo-badge"><img src="./images/engmarklogo.png" alt=""></div>
+            <div class="pdf-company-name">ENGMARK ENGENHARIA E EMPREENDIMENTOS LTDA</div>
+            <div class="pdf-company-sub">CNPJ: 58.147.963/0001-00</div>
+            <div class="pdf-company-sub">Maikel Langkamer de Souza — Eng. Civil — CREA: ES-058610/D</div>
+          </div>
+          <div class="pdf-contact">
+            <div>engmarkproj@outlook.com</div>
+            <div>(27) 99919-3938</div>
+          </div>
+        </div>
+
+        <!-- Title -->
+        <div class="pdf-title-block">
+          <div class="pdf-doc-title">Proposta / Orçamento</div>
+          <div class="pdf-client-line">A/c: <strong id="pdf-client">—</strong></div>
+        </div>
+
+        <!-- Intro -->
+        <div class="pdf-intro" id="pdf-intro">
+          Conforme solicitação, segue proposta de serviços de projetos para a edificação descrita acima.
+        </div>
+
+        <!-- Projects section -->
+        <div id="pdf-projects-section">
+          <div class="pdf-section-heading">Memorial Descriminado dos Serviços</div>
+          <div id="pdf-projects-list"></div>
+          <div class="pdf-art-notice">Todos os serviços com emissão de ART de elaboração de projetos.</div>
+        </div>
+
+        <!-- Total -->
+        <div class="pdf-total-row">
+          <span class="pdf-total-label">Total dos Projetos</span>
+          <span class="pdf-total-value" id="pdf-total">R$ 0,00</span>
+        </div>
+
+        <!-- Payment -->
+        <div class="pdf-payment-block">
+          <div class="pdf-section-heading">Condição de Pagamento</div>
+          <div class="pdf-payment-text" id="pdf-payment">—</div>
+          <div class="pdf-pix">Chave PIX: <strong id="pdf-pix">—</strong></div>
+        </div>
+
+        <!-- Observations -->
+        <div class="pdf-obs-block">
+          <div class="pdf-section-heading">Observações</div>
+          <div class="pdf-obs-text" id="pdf-obs">—</div>
+        </div>
+
+        <!-- Footer -->
+        <div class="pdf-footer">
+          <div class="pdf-city-date" id="pdf-footer-date">São Mateus – ES, —</div>
+          <div class="pdf-sig">
+            <div class="pdf-sig-line"></div>
+            <div class="pdf-sig-name">Maikel Langkamer de Souza</div>
+            <div class="pdf-sig-role">ENGMARK ENGENHARIA E EMPREENDIMENTOS LTDA</div>
+          </div>
+        </div>
+
+
+      </div><!-- /#pdf-preview -->
+    </main>
+
+  </div><!-- /.app-shell -->
+
+  <script>
+    // ── State ─────────────────────────────────────────────────────
+    const PROJECTS = {
+      arq: {
+        label: '1) Arquitetônico',
+        items: [
+          'a) Plantas dos pavimentos',
+          'b) Cortes',
+          'c) Detalhes isométricos',
+          'd) Elaboração de requerimento para prefeitura'
+        ]
+      },
+      est: {
+        label: '1) Estrutural',
+        section: 'PROJETOS COMPLEMENTARES',
+        items: [
+          'a) Plantas de formas e lajes',
+          'b) Cortes',
+          'c) Escopo de ferragens',
+          'd) Lista de materiais'
+        ]
+      },
+      ele: {
+        label: '2) Elétrico',
+        items: [
+          'a) Plantas baixas com layout de circuitos',
+          'b) Escopo de montagens de quadros de disjuntores',
+          'c) Quadro de cargas',
+          'd) Lista de materiais'
+        ]
+      },
+      hid: {
+        label: '3) Hidrossanitário',
+        items: [
+          'a) Plantas baixas com layout das tubulações',
+          'b) Escopo de montagens de caixas de inspeção',
+          'c) Detalhes isométricos',
+          'd) Lista de materiais'
+        ]
+      }
+    };
+
+    const selected = { arq: false, est: false, ele: false, hid: false };
+
+    // ── Init ──────────────────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', () => {
+      // set today's date
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('docDate').value = today;
+      updatePreview();
+    });
+
+    // ── Toggle project card ───────────────────────────────────────
+    function toggleCard(key) {
+      const card = document.getElementById('card-' + key);
+      const wasOpen = card.classList.contains('open');
+
+      // toggle open (expand/collapse)
+      card.classList.toggle('open');
+
+      // toggle checked (select/deselect)
+      selected[key] = !selected[key];
+      card.classList.toggle('checked', selected[key]);
+
+      updateTotal();
+      updatePreview();
+    }
+
+    // ── Format BRL currency ───────────────────────────────────────
+    function formatBRL(value) {
+      return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    }
+
+    // ── Update total ──────────────────────────────────────────────
+    function updateTotal() {
+      let total = 0;
+      Object.keys(selected).forEach(key => {
+        if (selected[key]) {
+          const val = parseFloat(document.getElementById('price-' + key).value) || 0;
+          total += val;
+        }
+      });
+      document.getElementById('totalDisplay').textContent = formatBRL(total);
+      document.getElementById('pdf-total').textContent = formatBRL(total);
+      updatePreview();
+    }
+
+    // ── Update PDF preview ────────────────────────────────────────
+    function updatePreview() {
+      // Client
+      const client = document.getElementById('clientName').value.trim() || '—';
+      document.getElementById('pdf-client').textContent = client;
+
+      // Intro / building description
+      const area = document.getElementById('area').value;
+      const desc = document.getElementById('buildingDesc').value.trim();
+      const floors = document.getElementById('floors').value;
+      let intro = 'Conforme solicitação, proposta de projeto';
+      if (desc) intro += ` para ${desc}`;
+      if (area) intro += `. Com uma área aproximada a construir de <strong>${area},00 m²</strong>`;
+      if (floors) intro += `. Com ${floors} pavimentos`;
+      intro += '.';
+      document.getElementById('pdf-intro').innerHTML = intro;
+
+      // Projects list
+      const list = document.getElementById('pdf-projects-list');
+      list.innerHTML = '';
+
+      let hasComplementar = false;
+      const keys = ['arq', 'est', 'ele', 'hid'];
+      const complementarKeys = ['est', 'ele', 'hid'];
+
+      // Insert "PROJETOS COMPLEMENTARES" heading before first complementar selected
+      let complementarHeadingInserted = false;
+
+      keys.forEach(key => {
+        if (!selected[key]) return;
+
+        const proj = PROJECTS[key];
+        const price = parseFloat(document.getElementById('price-' + key).value) || 0;
+
+        // Insert complementar heading once
+        if (complementarKeys.includes(key) && !complementarHeadingInserted) {
+          const heading = document.createElement('div');
+          heading.className = 'pdf-section-heading';
+          heading.style.marginTop = '20px';
+          heading.textContent = 'Projetos Complementares';
+          list.appendChild(heading);
+          complementarHeadingInserted = true;
+        }
+
+        const block = document.createElement('div');
+        block.className = 'pdf-project-block';
+
+        const priceStr = price > 0 ? `<span class="pdf-project-price">${formatBRL(price)}</span>` : '';
+        const itemsHtml = proj.items.map(i => `<li>${i}</li>`).join('');
+
+        block.innerHTML = `
+        <div class="pdf-project-title">
+          <span>${proj.label}</span>
+          ${priceStr}
+        </div>
+        <ul class="pdf-project-items">${itemsHtml}</ul>
+      `;
+        list.appendChild(block);
+      });
+
+      if (list.children.length === 0) {
+        list.innerHTML = '<p style="color:#999;font-size:12px;font-style:italic;">Nenhum projeto selecionado ainda.</p>';
+      }
+
+      // Payment
+      const payment = document.getElementById('paymentCondition').value.trim() || '—';
+      document.getElementById('pdf-payment').textContent = payment;
+      const pix = document.getElementById('pixKey').value.trim() || '—';
+      document.getElementById('pdf-pix').textContent = pix;
+
+      // Observations
+      const obs = document.getElementById('observations').value.trim() || '—';
+      document.getElementById('pdf-obs').textContent = obs;
+
+      // Footer date
+      const dateVal = document.getElementById('docDate').value;
+      const city = document.getElementById('city').value.trim() || 'São Mateus – ES';
+      let dateStr = '—';
+      if (dateVal) {
+        const d = new Date(dateVal + 'T12:00:00');
+        dateStr = d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
+      }
+      document.getElementById('pdf-footer-date').textContent = `${city}, ${dateStr}.`;
+    }
+
+    // ── Generate PDF ──────────────────────────────────────────────
+    function generatePDF() {
+      const element = document.getElementById('pdf-preview');
+      const clientName = document.getElementById('clientName').value.trim() || 'orcamento';
+      const filename = `Orçamento_Engmark_${clientName.replace(/\s+/g, '_')}.pdf`;
+
+      const opt = {
+        margin: [2, 2, 2, 2],
+        filename: filename,
+        image: { type: 'jpeg', quality: 0.97 },
+        html2canvas: { scale: 2, useCORS: true, letterRendering: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      html2pdf().set(opt).from(element).save();
+    }
+
+    // ── Reset form ────────────────────────────────────────────────
+    function resetForm() {
+      if (!confirm('Limpar todos os campos?')) return;
+
+      document.getElementById('clientName').value = '';
+      document.getElementById('buildingDesc').value = '';
+      document.getElementById('area').value = '';
+      document.getElementById('floors').value = '';
+      document.getElementById('paymentCondition').value = '';
+      document.getElementById('pixKey').value = 'CNPJ: 58.147.963/0001-00 – Engmark Projetos – C6 Bank';
+
+      Object.keys(selected).forEach(key => {
+        selected[key] = false;
+        document.getElementById('card-' + key).classList.remove('checked', 'open');
+        document.getElementById('price-' + key).value = '';
+      });
+
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('docDate').value = today;
+
+      updateTotal();
+      updatePreview();
+    }
+  </script>
+</body>
+
+</html>

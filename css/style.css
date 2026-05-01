@@ -1,0 +1,39 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  background: gray;
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.logo img {
+  width: 60px;
+  height: auto;
+}
+
+.titles h1 {
+  margin: 0;
+}
+
+.titles h3 {
+  margin: 0;
+  font-size: 12px;
+  font-weight: normal;
+}
+
+.topbar-actions {
+  margin-left: auto; /* empurra tudo pra direita */
+  display: flex;
+  gap: 10px;
+}

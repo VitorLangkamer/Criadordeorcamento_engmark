@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/style.css">
+    <title>Engmark - gerador de orcamento</title>
+</head>
+<body>
+  <!-- Topo -->
+  <header class="topbar">
+  
+  <div class="topbar-left">
+    <div class="logo">
+      <img src="./images/engmarklogo.png" alt="Logo Engmark">
+    </div>
+
+    <div class="titles">
+      <h1>Engmark</h1>
+      <h3>GERADOR DE ORÇAMENTOS</h3>
+    </div>
+  </div>
+
+  <div class="topbar-actions">
+    <button onclick="resetForm()" class="btn-clear">Limpar</button>
+    <button onclick="generatePDF()" class="btn-download">Gerar PDF</button>
+  </div>
+
+</header>
+
+  <!-- Lateral -->
+  <aside class="sidebar">
+
+    <!-- Cliente -->
+
+    
+    <section>
+      <h3>Cliente</h3>
+      <input id="clientName" placeholder="Nome" oninput="updatePreview()">
+      <input id="city" value="São Mateus – ES" oninput="updatePreview()">
+      <input type="date" id="docDate" oninput="updatePreview()">
+    </section>
+
+    <!-- Obra -->
+    <section>
+      <h3>Obra</h3>
+      <textarea id="buildingDesc" placeholder="Descrição" oninput="updatePreview()"></textarea>
+      <input type="number" id="area" placeholder="Área (m²)" oninput="updatePreview()">
+      <input type="number" id="floors" placeholder="Pavimentos" oninput="updatePreview()">
+    </section>
+
+    <!-- Projetos -->
+    <section>
+      <h3>Projetos</h3>
+
+      <div class="proj">
+        <label>Arquitetônico</label>
+        <input type="number" id="price-arq" oninput="updateTotal()">
+      </div>
+
+      <div class="proj">
+        <label>Estrutural</label>
+        <input type="number" id="price-est" oninput="updateTotal()">
+      </div>
+
+      <div class="proj">
+        <label>Elétrico</label>
+        <input type="number" id="price-ele" oninput="updateTotal()">
+      </div>
+
+      <div class="proj">
+        <label>Hidrossanitário</label>
+        <input type="number" id="price-hid" oninput="updateTotal()">
+      </div>
+
+      <p>Total: <strong id="totalDisplay">R$ 0,00</strong></p>
+    </section>
+
+    <!-- Pagamento -->
+    <section>
+      <h3>Pagamento</h3>
+      <input id="paymentCondition" placeholder="Condição" oninput="updatePreview()">
+      <input id="pixKey" oninput="updatePreview()">
+    </section>
+
+    <!-- Observações -->
+    <section>
+      <h3>Observações</h3>
+      <textarea id="observations" oninput="updatePreview()"></textarea>
+    </section>
+
+  </aside>
+
+  <!-- Preview -->
+  <main id="pdf-preview">
+
+    <h2>Proposta / Orçamento</h2>
+    <p>A/c: <strong id="pdf-client">—</strong></p>
+
+    <div id="pdf-projects-list"></div>
+
+    <p>Total: <strong id="pdf-total">R$ 0,00</strong></p>
+
+    <p id="pdf-payment">—</p>
+    <p><strong id="pdf-pix">—</strong></p>
+
+    <p id="pdf-obs">—</p>
+
+    <footer>
+      <p id="pdf-footer-date">São Mateus – ES</p>
+      <p>Maikel Langkamer de Souza</p>
+    </footer>
+
+  </main>
+
+</body>
+</html>
