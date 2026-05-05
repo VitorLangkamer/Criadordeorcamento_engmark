@@ -524,6 +524,86 @@
     .pdf-sig-name { font-family: var(--font-head); font-size: 12px; font-weight: 700; color: var(--accent-dk); }
     .pdf-sig-role { font-size: 11px; color: #555; }
 
+    /* ── Orçamento de Obra — Sidebar ───────────────────────────── */
+    .obra-field { display: flex; flex-direction: column; gap: 8px; }
+
+    .obra-toggle-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .obra-toggle-row input[type="checkbox"] {
+      width: 15px;
+      height: 15px;
+      accent-color: var(--accent);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .obra-toggle-row span { font-size: 12px; color: var(--muted); }
+
+    .obra-adicional {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      margin-top: 2px;
+    }
+
+    .obra-adicional.visible { display: flex; }
+
+    .obra-adicional label { font-size: 12px; color: var(--muted); white-space: nowrap; flex-shrink: 0; }
+
+    .obra-adicional input {
+      background: var(--card);
+      border: 1px solid var(--accent);
+      border-radius: 6px;
+      color: var(--accent-lt);
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 500;
+      padding: 6px 10px;
+      outline: none;
+      width: 80px;
+    }
+
+    .obra-subtotal { font-size: 11.5px; color: var(--accent-lt); font-weight: 600; text-align: right; min-height: 16px; }
+
+    /* ── Orçamento de Obra — PDF ────────────────────────────────── */
+    .pdf-obra-block { page-break-inside: avoid; break-inside: avoid; }
+
+    .pdf-obra-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+
+    .pdf-obra-table th {
+      background: #f0f4f8;
+      color: var(--accent-dk);
+      font-family: var(--font-head);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 8px 12px;
+      text-align: left;
+      border-bottom: 2px solid #dde3ea;
+    }
+
+    .pdf-obra-table th:last-child { text-align: right; }
+    .pdf-obra-table td { padding: 9px 12px; color: #333; border-bottom: 1px solid #eee; }
+    .pdf-obra-table td:last-child { text-align: right; font-weight: 600; color: var(--accent-dk); }
+    .pdf-obra-table tr.obra-adicional-row td { color: #888; font-size: 11.5px; font-style: italic; }
+
+    .pdf-obra-table tr.obra-total-row td {
+      background: var(--accent-dk);
+      color: #fff;
+      font-family: var(--font-head);
+      font-weight: 700;
+      border-bottom: none;
+    }
+
+    .pdf-obra-table tr.obra-total-row td:last-child { color: var(--accent-lt); font-size: 15px; }
+
     /* ── Scrollbar for preview ──────────────────────────────────── */
     .preview-pane::-webkit-scrollbar { width: 6px; }
     .preview-pane::-webkit-scrollbar-track { background: #ccc; }
@@ -771,6 +851,48 @@
         </div>
       </div>
 
+      <!-- 7. Orçamento de Obra -->
+      <div>
+        <p class="section-label">Orçamento de Obra</p>
+        <div class="field-group">
+
+          <!-- Estimativa de Material -->
+          <div class="obra-field">
+            <div class="field">
+              <label>Estimativa de Material (R$)</label>
+              <input type="number" id="obraMatVal" placeholder="Ex.: 80000" oninput="updateObraPreview()" />
+            </div>
+            <label class="obra-toggle-row">
+              <input type="checkbox" id="obraMatCheck" onchange="toggleObraAdicional('mat')" />
+              <span>Adicionar % sobre o material</span>
+            </label>
+            <div class="obra-adicional" id="obraMatAdicional">
+              <label>Adicional (%)</label>
+              <input type="number" id="obraMatPct" placeholder="Ex.: 10" min="0" max="100" oninput="updateObraPreview()" />
+            </div>
+            <div class="obra-subtotal" id="obraMatSubtotal"></div>
+          </div>
+
+          <!-- Estimativa de Mão de Obra -->
+          <div class="obra-field">
+            <div class="field">
+              <label>Estimativa de Mão de Obra (R$)</label>
+              <input type="number" id="obraMaoVal" placeholder="Ex.: 40000" oninput="updateObraPreview()" />
+            </div>
+            <label class="obra-toggle-row">
+              <input type="checkbox" id="obraMaoCheck" onchange="toggleObraAdicional('mao')" />
+              <span>Adicionar % sobre a mão de obra</span>
+            </label>
+            <div class="obra-adicional" id="obraMaoAdicional">
+              <label>Adicional (%)</label>
+              <input type="number" id="obraMaoPct" placeholder="Ex.: 10" min="0" max="100" oninput="updateObraPreview()" />
+            </div>
+            <div class="obra-subtotal" id="obraMaoSubtotal"></div>
+          </div>
+
+        </div>
+      </div>
+
     </aside>
 
     <!-- ── Preview Pane ───────────────────────────────────────────── -->
@@ -807,8 +929,8 @@
         <!-- Projects section -->
         <div id="pdf-projects-section">
           <div class="pdf-section-heading">Memorial Descriminado dos Serviços</div>
-          <div class="pdf-art-notice">Todos os serviços com emissão de ART de elaboração de projetos.</div>
           <div id="pdf-projects-list"></div>
+          <div class="pdf-art-notice">Todos os serviços com emissão de ART de elaboração de projetos.</div>
         </div>
 
         <!-- ══ PÁGINA 2 — Quebra forçada antes deste bloco ══════ -->
@@ -818,6 +940,20 @@
           <div class="pdf-total-row">
             <span class="pdf-total-label">Total dos Projetos</span>
             <span class="pdf-total-value" id="pdf-total">R$ 0,00</span>
+          </div>
+
+          <!-- Orçamento de Obra -->
+          <div class="pdf-obra-block" id="pdf-obra-block" style="display:none;">
+            <div class="pdf-section-heading">Orçamento de Obra</div>
+            <table class="pdf-obra-table" id="pdf-obra-table">
+              <thead>
+                <tr>
+                  <th>Descrição</th>
+                  <th>Valor</th>
+                </tr>
+              </thead>
+              <tbody id="pdf-obra-tbody"></tbody>
+            </table>
           </div>
 
           <!-- Payment -->
@@ -921,7 +1057,7 @@
       Object.keys(selected).forEach(key => {
         if (selected[key]) {
           const val = parseFloat(document.getElementById('price-' + key).value) || 0;
-          total += val;
+          total += val / 0.95;
         }
       });
       document.getElementById('totalDisplay').textContent = formatBRL(total);
@@ -1010,11 +1146,87 @@
       document.getElementById('pdf-footer-date').textContent = `${city}, ${dateStr}.`;
     }
 
+    // ── Obra: toggle adicional subcampo ──────────────────────────
+    function toggleObraAdicional(tipo) {
+      const id = tipo === 'mat' ? 'obraMatAdicional' : 'obraMaoAdicional';
+      const checkId = tipo === 'mat' ? 'obraMatCheck' : 'obraMaoCheck';
+      const el = document.getElementById(id);
+      const checked = document.getElementById(checkId).checked;
+      el.classList.toggle('visible', checked);
+      if (!checked) {
+        document.getElementById(tipo === 'mat' ? 'obraMatPct' : 'obraMaoPct').value = '';
+      }
+      updateObraPreview();
+    }
+
+    // ── Obra: calcula valor com adicional opcional ────────────────
+    function calcObra(valId, checkId, pctId, subtotalId) {
+      const base = parseFloat(document.getElementById(valId).value) || 0;
+      const hasExtra = document.getElementById(checkId).checked;
+      const pct = hasExtra ? (parseFloat(document.getElementById(pctId).value) || 0) : 0;
+      const extra = base * (pct / 100);
+      const total = base + extra;
+
+      const subtotalEl = document.getElementById(subtotalId);
+      if (base > 0 && hasExtra && pct > 0) {
+        subtotalEl.textContent = `${formatBRL(base)} + ${pct}% = ${formatBRL(total)}`;
+      } else if (base > 0) {
+        subtotalEl.textContent = formatBRL(total);
+      } else {
+        subtotalEl.textContent = '';
+      }
+      return { base, extra, total, pct, hasExtra };
+    }
+
+    // ── Obra: atualiza bloco no PDF ───────────────────────────────
+    function updateObraPreview() {
+      const mat = calcObra('obraMatVal', 'obraMatCheck', 'obraMatPct', 'obraMatSubtotal');
+      const mao = calcObra('obraMaoVal', 'obraMaoCheck', 'obraMaoPct', 'obraMaoSubtotal');
+
+      const block = document.getElementById('pdf-obra-block');
+      const tbody = document.getElementById('pdf-obra-tbody');
+
+      if (mat.base === 0 && mao.base === 0) {
+        block.style.display = 'none';
+        return;
+      }
+
+      block.style.display = 'block';
+      tbody.innerHTML = '';
+
+      const addRow = (label, value, cls = '') => {
+        const tr = document.createElement('tr');
+        if (cls) tr.className = cls;
+        tr.innerHTML = `<td>${label}</td><td>${formatBRL(value)}</td>`;
+        tbody.appendChild(tr);
+      };
+
+      if (mat.base > 0) {
+        addRow('Estimativa de Material', mat.base);
+        if (mat.hasExtra && mat.pct > 0) {
+          addRow(`Adicional sobre material (${mat.pct}%)`, mat.extra, 'obra-adicional-row');
+        }
+      }
+
+      if (mao.base > 0) {
+        addRow('Estimativa de Mão de Obra', mao.base);
+        if (mao.hasExtra && mao.pct > 0) {
+          addRow(`Adicional sobre mão de obra (${mao.pct}%)`, mao.extra, 'obra-adicional-row');
+        }
+      }
+
+      const totalObra = mat.total + mao.total;
+      addRow('Total Estimado da Obra', totalObra, 'obra-total-row');
+    }
+
     // ── Generate PDF ──────────────────────────────────────────────
     function generatePDF() {
       const element = document.getElementById('pdf-preview');
       const clientName = document.getElementById('clientName').value.trim() || 'orcamento';
       const filename = `Orçamento_Engmark_${clientName.replace(/\s+/g, '_')}.pdf`;
+
+      // Remove temporariamente o min-height para evitar página em branco
+      element.style.minHeight = '0';
 
       const opt = {
         margin: [2, 2, 2, 2],
@@ -1024,7 +1236,10 @@
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
 
-      html2pdf().set(opt).from(element).save();
+      html2pdf().set(opt).from(element).save().then(() => {
+        // Restaura o min-height após gerar
+        element.style.minHeight = '';
+      });
     }
 
     // ── Reset form ────────────────────────────────────────────────
@@ -1044,15 +1259,21 @@
         document.getElementById('price-' + key).value = '';
       });
 
+      // Reset obra
+      ['obraMatVal','obraMaoVal','obraMatPct','obraMaoPct'].forEach(id => document.getElementById(id).value = '');
+      ['obraMatCheck','obraMaoCheck'].forEach(id => document.getElementById(id).checked = false);
+      ['obraMatAdicional','obraMaoAdicional'].forEach(id => document.getElementById(id).classList.remove('visible'));
+      ['obraMatSubtotal','obraMaoSubtotal'].forEach(id => document.getElementById(id).textContent = '');
+      document.getElementById('pdf-obra-block').style.display = 'none';
+
       const today = new Date().toISOString().split('T')[0];
       document.getElementById('docDate').value = today;
 
       updateTotal();
       updatePreview();
+      updateObraPreview();
     }
   </script>
 </body>
 
 </html>
-
-
